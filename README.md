@@ -1,6 +1,21 @@
 # moula-paymet-api
 
 The RESTful API is built with ASP.NET Core 3.1 using a decoupled, maintainable architecture.
+The solution comprises of the following projects - 
+
+**Payment.Api** - The REST Api project
+
+**Payment.Api.UnitTest** - Unit Test project
+
+**Payment.Api.FunctionalTest**  - Functional test project
+
+The API project uses localDb storage. The following customers are preloaded in the database - 
+
+| Customer Id                            | Full Name      |
+| -------------------------------------- | -------------- |
+| `eb07ea19-38cc-4579-892c-510da1eca613` | David Snedakar |
+| `639485dc-edb9-4e0d-abc5-b164db1aa497` | Curtis Peltz   |
+
 
 ## Frameworks and Libraries
 - [ASP.NET Core 3.1](https://docs.microsoft.com/en-us/aspnet/core/release-notes/aspnetcore-3.1?view=aspnetcore-3.1);
@@ -22,13 +37,6 @@ Navigate to ```https://localhost:5001/swagger``` to check the API documentation.
 Navigate to ```https://localhost:5001/api/customer/eb07ea19-38cc-4579-892c-510da1eca613``` to check if the API is working. 
 
 To test all the scenarios, you can use the following curl commands
-
-The database is preloaded with the following customers - 
-
-| Customer Id                            | Full Name      |
-| -------------------------------------- | -------------- |
-| `eb07ea19-38cc-4579-892c-510da1eca613` | David Snedakar |
-| `639485dc-edb9-4e0d-abc5-b164db1aa497` | Curtis Peltz   |
 
 ### As a user I want to see my balance and a list of payments. 
 
