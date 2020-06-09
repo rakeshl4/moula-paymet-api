@@ -15,7 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\RefactorThis\Payment.Api.csproj" />
+    <ProjectReference Include="..\Payment.Api\Payment.Api.csproj" />
   </ItemGroup>
 
 </Project>
