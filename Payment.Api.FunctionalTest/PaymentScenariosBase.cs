@@ -1,10 +1,10 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
 using System.IO;
-using System.Reflection;
 using Microsoft.Extensions.Configuration;
 using Payment.Api.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore;
 
 namespace Payment.Api.FunctionalTest
 {
@@ -12,18 +12,12 @@ namespace Payment.Api.FunctionalTest
     {
         public TestServer CreateServer()
         {
-            var path = Assembly.GetAssembly(typeof(PaymentScenariosBase))
-              .Location;
-            var hostBuilder = new WebHostBuilder()
-                .UseContentRoot(Path.GetDirectoryName(path))
-                .ConfigureAppConfiguration(cb =>
-                {
-                    cb.AddJsonFile("appsettings.json", optional: false)
-                    .AddEnvironmentVariables();
-                })
-                .UseStartup<Startup>();
-
+            var configuration = GetConfiguration();
+            var hostBuilder = WebHost.CreateDefaultBuilder()
+            .UseConfiguration(configuration)
+            .UseStartup<Startup>();
             var testServer = new TestServer(hostBuilder);
+
             using (var scope = testServer.Host.Services.CreateScope())
             using (var context = scope.ServiceProvider.GetService<PaymentDbContext>())
             {
@@ -32,45 +26,13 @@ namespace Payment.Api.FunctionalTest
             return testServer;
         }
 
-        public static class Get
+        private static IConfiguration GetConfiguration()
         {
-            private const int PageIndex = 0;
-            private const int PageCount = 4;
-
-            public static string Items(bool paginated = false)
-            {
-                return paginated
-                    ? "api/v1/catalog/items" + Paginated(PageIndex, PageCount)
-                    : "api/v1/catalog/items";
-            }
-
-            public static string ItemById(int id)
-            {
-                return $"api/v1/catalog/items/{id}";
-            }
-
-            public static string ItemByName(string name, bool paginated = false)
-            {
-                return paginated
-                    ? $"api/v1/catalog/items/withname/{name}" + Paginated(PageIndex, PageCount)
-                    : $"api/v1/catalog/items/withname/{name}";
-            }
-
-            public static string Types = "api/v1/catalog/catalogtypes";
-
-            public static string Brands = "api/v1/catalog/catalogbrands";
-
-            public static string Filtered(int catalogTypeId, int catalogBrandId, bool paginated = false)
-            {
-                return paginated
-                    ? $"api/v1/catalog/items/type/{catalogTypeId}/brand/{catalogBrandId}" + Paginated(PageIndex, PageCount)
-                    : $"api/v1/catalog/items/type/{catalogTypeId}/brand/{catalogBrandId}";
-            }
-
-            private static string Paginated(int pageIndex, int pageCount)
-            {
-                return $"?pageIndex={pageIndex}&pageSize={pageCount}";
-            }
+            var builder = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+                .AddEnvironmentVariables();
+            return builder.Build();
         }
     }
 }

@@ -17,7 +17,7 @@ namespace Payment.Api.Controllers
             _paymentService = paymentService;
         }
 
-        [HttpPost("create/{customerId}")]
+        [HttpPost("create")]
         public async Task<IActionResult> CreatePayment
             ([FromBody]Models.Payment paymentRequest)
         {
